@@ -28,6 +28,9 @@ class Matrix(object):
             if len(X[i])!=first_row_len:
                 raise Exception("All rows in X must be the same length.")
 
+    def invert(self):
+        return invert(self.X)
+
 def check_for_all_zeros(X,i,j):
     non_zeros = []
     first_non_zero = -1
@@ -55,10 +58,12 @@ def make_identity(r,c):
         identity.append(row)
     return identity
 
-
 def invert(X):
     """
     Invert a matrix X according to gauss-jordan elimination
+    In gauss-jordan elimination, we perform basic row operations to turn a matrix into
+    row-echelon form.  If we concatenate an identity matrix to our input
+    matrix during this process, we will turn the identity matrix into our inverse.
     X - input list of lists where each list is a matrix row
     output - inverse of X
     """
@@ -84,20 +89,24 @@ def invert(X):
         if zero_sum==0:
             if j==cols:
                 return X
-            continue
+            raise Exception("Matrix is singular.")
         #If X[i][j] is 0, and there is a nonzero value below it, swap the two rows
         if first_non_zero != i:
             X = swap_row(X,i,first_non_zero)
+        #Divide X[i] by X[i][j] to make X[i][j] equal 1
         X[i] = [m/X[i][j] for m in X[i]]
+
+        #Rescale all other rows to make their values 0 below X[i][j]
         for q in xrange(0,rows):
             if q!=i:
                 scaled_row = [X[q][j] * m for m in X[i]]
                 X[q]= [X[q][m] - scaled_row[m] for m in xrange(0,len(scaled_row))]
+        #If either of these is true, we have iterated through the matrix, and are done
         if i==rows or j==cols:
             break
-        print X
         i+=1
 
+    #Get just the right hand matrix, which is now our inverse
     for i in xrange(0,rows):
         X[i] = X[i][cols:len(X[i])]
 

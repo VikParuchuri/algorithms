@@ -18,8 +18,10 @@ class LinregNonMatrix(Algorithm):
 class LinregListMatrix(Algorithm):
     def train(self, X, y):
         X = self.append_intercept(X)
-        first_part = (Matrix(X) * Matrix(X).transpose).invert()
+        first_part = (Matrix(X) * Matrix(X).transpose()).invert()
         second_part = Matrix(X).transpose() * Matrix(y)
+        print first_part.X
+        print second_part.X
         coefs = first_part * second_part
         self.coefs = coefs
 

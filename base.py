@@ -30,6 +30,7 @@ class Matrix(object):
 
     def invert(self):
         self.X = invert(self.X)
+        return self
     
     @property
     def rows(self):
@@ -47,6 +48,7 @@ class Matrix(object):
                 row.append(self.X[i][j])
             trans.append(row)
         self.X = trans
+        return self
 
     def __getitem__(self, key):
         return self.X[key]
@@ -73,7 +75,7 @@ class Matrix(object):
             for j in xrange(0,Z.cols):
                 row.append(row_multiply(self.X[i], [Z[m][j] for m in xrange(0,Z.rows)]))
             product.append(row)
-        return product
+        return Matrix(product)
 
 def row_multiply(r1,r2):
     assert(len(r1)==len(r2))
@@ -83,6 +85,15 @@ def row_multiply(r1,r2):
     return sum(products)
 
 def check_for_all_zeros(X,i,j):
+    """
+    Check matrix X to see if only zeros exist at or below row i in column j
+    X - a list of lists
+    i - row index
+    j - column index
+    returns -
+        zero_sum - the count of non zero entries
+        first_non_zero - index of the first non value
+    """
     non_zeros = []
     first_non_zero = -1
     for m in xrange(i,len(X)):
@@ -94,10 +105,23 @@ def check_for_all_zeros(X,i,j):
     return zero_sum, first_non_zero
 
 def swap_row(X,i,p):
+    """
+    Swap row i and row p in a list of lists
+    X - list of lists
+    i - row index
+    p - row index
+    returns- modified matrix
+    """
     X[p], X[i] = X[i], X[p]
     return X
 
 def make_identity(r,c):
+    """
+    Make an identity matrix with dimensions rxc
+    r - number of rows
+    c - number of columns
+    returns - list of lists corresponding to  the identity matrix
+    """
     identity = []
     for i in xrange(0,r):
         row = []
@@ -116,7 +140,7 @@ def invert(X):
     row-echelon form.  If we concatenate an identity matrix to our input
     matrix during this process, we will turn the identity matrix into our inverse.
     X - input list of lists where each list is a matrix row
-    output - inverse of X
+    returns - inverse of X
     """
     #copy X to avoid altering input
     X = deepcopy(X)

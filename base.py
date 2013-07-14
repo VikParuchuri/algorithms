@@ -9,7 +9,7 @@ class Algorithm(object):
     def train(self, X, y):
         pass
 
-    def predict(self, X, y):
+    def predict(self, X):
         pass
 
 class Matrix(object):
@@ -29,7 +29,7 @@ class Matrix(object):
                 raise Exception("All rows in X must be the same length.")
 
     def invert(self):
-        return invert(self.X)
+        self.X = invert(self.X)
     
     @property
     def rows(self):
@@ -48,18 +48,30 @@ class Matrix(object):
             trans.append(row)
         self.X = trans
 
-    def __mul__(self, Z):
-        self.validate(Z)
+    def __getitem__(self, key):
+        return self.X[key]
 
-        z_rows = len(Z)
-        z_cols = len(Z[0])
-        assert z_rows==self.cols
+    def __setitem__(self, key, value):
+        assert self.rows == len(value)
+        self.X[key] = value
+
+    def __delitem__(self, key):
+        del self.X[key]
+
+
+    def __len__(self):
+        return self.rows
+
+    def __mul__(self, Z):
+        assert(isinstance(Z, Matrix))
+
+        assert Z.rows==self.cols
 
         product = []
         for i in xrange(0,self.rows):
             row = []
-            for j in xrange(0,z_cols):
-                row.append(row_multiply(self.X[i], [Z[m][j] for m in xrange(0,z_rows)]))
+            for j in xrange(0,Z.cols):
+                row.append(row_multiply(self.X[i], [Z[m][j] for m in xrange(0,Z.rows)]))
             product.append(row)
         return product
 

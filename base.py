@@ -64,6 +64,19 @@ class Matrix(object):
     def __len__(self):
         return self.rows
 
+    def __rmul__(self, Z):
+        assert(isinstance(Z, Matrix))
+
+        assert Z.cols==self.rows
+
+        product = []
+        for i in xrange(0,Z.rows):
+            row = []
+            for j in xrange(0,self.cols):
+                row.append(row_multiply(Z.X[i], [self.X[m][j] for m in xrange(0,self.rows)]))
+            product.append(row)
+        return Matrix(product)
+
     def __mul__(self, Z):
         assert(isinstance(Z, Matrix))
 
@@ -76,6 +89,9 @@ class Matrix(object):
                 row.append(row_multiply(self.X[i], [Z[m][j] for m in xrange(0,Z.rows)]))
             product.append(row)
         return Matrix(product)
+
+    def __str__(self):
+        return str(self.X)
 
 def row_multiply(r1,r2):
     assert(len(r1)==len(r2))

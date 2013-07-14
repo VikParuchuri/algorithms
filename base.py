@@ -30,6 +30,45 @@ class Matrix(object):
 
     def invert(self):
         return invert(self.X)
+    
+    @property
+    def rows(self):
+        return len(self.X)
+    
+    @property
+    def cols(self):
+        return len(self.X[0])
+    
+    def transpose(self):
+        trans = []
+        for j in xrange(0,self.cols):
+            row = []
+            for i in xrange(0,self.rows):
+                row.append(self.X[i][j])
+            trans.append(row)
+        self.X = trans
+
+    def __mul__(self, Z):
+        self.validate(Z)
+
+        z_rows = len(Z)
+        z_cols = len(Z[0])
+        assert z_rows==self.cols
+
+        product = []
+        for i in xrange(0,self.rows):
+            row = []
+            for j in xrange(0,z_cols):
+                row.append(row_multiply(self.X[i], [Z[m][j] for m in xrange(0,z_rows)]))
+            product.append(row)
+        return product
+
+def row_multiply(r1,r2):
+    assert(len(r1)==len(r2))
+    products =[]
+    for i in xrange(0,len(r1)):
+        products.append(r1[i]*r2[i])
+    return sum(products)
 
 def check_for_all_zeros(X,i,j):
     non_zeros = []

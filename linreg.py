@@ -1,4 +1,4 @@
-from base import Algorithm, mean
+from base import Algorithm, mean, Matrix
 
 class LinregNonMatrix(Algorithm):
     def train(self, x, y):
@@ -15,5 +15,6 @@ class LinregNonMatrix(Algorithm):
 
 class LinregListMatrix(Algorithm):
     def train(self, X, y):
-        pass
+        X = Matrix(X)
+
 

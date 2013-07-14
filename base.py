@@ -9,7 +9,7 @@ class Algorithm(object):
     def train(self, X, y):
         pass
 
-    def predict(self, X):
+    def predict(self, Z):
         pass
 
 class Matrix(object):

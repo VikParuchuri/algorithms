@@ -1,5 +1,6 @@
 from base import Algorithm, mean, Matrix
 from copy import deepcopy
+from numpy import array,linalg, ones,vstack
 
 class LinregNonMatrix(Algorithm):
     def train(self, x, y):
@@ -33,6 +34,17 @@ class LinregListMatrix(Algorithm):
         for i in xrange(0,len(X)):
             X[i] = [1] + X[i]
         return X
+
+class LinregNumpy(Algorithm):
+    def train(self,X,y):
+        X = vstack([array(X).T,ones(len(X))]).T
+        self.coefs = linalg.lstsq(X,y)[0]
+        self.coefs = self.coefs.reshape(self.coefs.shape[0],-1)
+
+    def predict(self,Z):
+        Z = vstack([array(Z).T,ones(len(Z))]).T
+        return Z.dot(self.coefs)
+
 
 
 

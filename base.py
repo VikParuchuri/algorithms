@@ -3,44 +3,84 @@ from copy import deepcopy
 
 
 class Algorithm(object):
+    """
+    Base class for an algorithm
+    """
     def __init__(self):
+        """
+        Override if needed.
+        """
         pass
 
     def train(self, X, y):
+        """
+        Train the algorithm.  Must override.
+        """
         pass
 
     def predict(self, Z):
+        """
+        Predict using input data.  Must override.
+        """
         pass
 
 class Matrix(object):
+    """
+    Represent a matrix and allow for basic matrix operations to be done.
+    """
     def __init__(self, X):
+        """
+        X - a list of lists, ie [[1],[1]]
+        """
+        #Validate that the input is ok
         self.validate(X)
         self.X = X
 
     def validate(self, X):
+        """
+        Validate that a given list of lists is a proper matrix
+        X - a list of lists
+        """
         list_error = "X must be a list of lists corresponding to a matrix, with each sub-list being a row."
+        #Input must be a list
         if not isinstance(X, list):
             raise Exception(list_error)
-        if not isinstance(X[0], list):
-            raise Exception(list_error)
+        #All list elements must also be lists
+        for i in xrange(0,len(X)):
+            if not isinstance(X[i], list):
+                raise Exception(list_error)
+
+        #All rows must have equal length
         first_row_len = len(X[0])
         for i in xrange(0,len(X)):
             if len(X[i])!=first_row_len:
                 raise Exception("All rows in X must be the same length.")
 
     def invert(self):
+        """
+        Invert the matrix in place.
+        """
         self.X = invert(self.X)
         return self
     
     @property
     def rows(self):
+        """
+        Number of rows in the matrix
+        """
         return len(self.X)
     
     @property
     def cols(self):
+        """
+        Number of columns in the matrix
+        """
         return len(self.X[0])
     
     def transpose(self):
+        """
+        Transpose the matrix in place.
+        """
         trans = []
         for j in xrange(0,self.cols):
             row = []
@@ -51,22 +91,39 @@ class Matrix(object):
         return self
 
     def __getitem__(self, key):
+        """
+        Get a row of the matrix, ie m=Matrix([[1],[1]]); m[0]
+        """
         return self.X[key]
 
     def __setitem__(self, key, value):
+        """
+        Set a row of the matrix, ie m=Matrix([[1],[1]]); m[0] = [2]
+        """
         assert self.rows == len(value)
         self.X[key] = value
 
     def __delitem__(self, key):
+        """
+        Delete a row of the matrix
+        """
         del self.X[key]
 
 
     def __len__(self):
+        """
+        Get the length of the matrix
+        """
         return self.rows
 
     def __rmul__(self, Z):
+        """
+        Right hand multiplication, ie other_matrix * matrix
+        """
+        #Only 2 Matrix objects can be multiplied
         assert(isinstance(Z, Matrix))
 
+        #Number of columns in other matrix must match number of rows in this matrix
         assert Z.cols==self.rows
 
         product = []
@@ -78,6 +135,9 @@ class Matrix(object):
         return Matrix(product)
 
     def __mul__(self, Z):
+        """
+        Left hand multiplication, ie matrix * other_matrix
+        """
         assert(isinstance(Z, Matrix))
 
         assert Z.rows==self.cols
@@ -91,9 +151,17 @@ class Matrix(object):
         return Matrix(product)
 
     def __str__(self):
+        """
+        String representation of matrix.
+        """
         return str(self.X)
 
 def row_multiply(r1,r2):
+    """
+    Multiply two vectors.  Used for matrix multiplication.
+    r1 - first vector, ie [1,1]
+    r2 - second vector
+    """
     assert(len(r1)==len(r2))
     products =[]
     for i in xrange(0,len(r1)):
@@ -204,6 +272,10 @@ def invert(X):
     return X
 
 def mean(l):
+    """
+    Mean of a list
+    l - input list
+    """
     sum(l)/len(l)
 
 def gje(X):

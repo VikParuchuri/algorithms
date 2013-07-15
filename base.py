@@ -1,6 +1,6 @@
 from __future__ import division
 from copy import deepcopy
-
+import math
 
 class Algorithm(object):
     """
@@ -100,8 +100,16 @@ class Matrix(object):
         """
         Set a row of the matrix, ie m=Matrix([[1],[1]]); m[0] = [2]
         """
-        assert self.rows == len(value)
+        assert self.cols == len(value)
         self.X[key] = value
+
+    def set_column(self, key, value):
+        """
+        Set a column to a specific value
+        """
+        assert self.rows == len(value)
+        for i in xrange(0,self.rows):
+            self.X[i][key] = value[i]
 
     def __delitem__(self, key):
         """
@@ -109,6 +117,12 @@ class Matrix(object):
         """
         del self.X[key]
 
+    def del_column(self, key):
+        """
+        Delete a specified column
+        """
+        for i in xrange(0,self.rows):
+            del self.X[i][key]
 
     def __len__(self):
         """
@@ -153,6 +167,12 @@ class Matrix(object):
     def __str__(self):
         """
         String representation of matrix.
+        """
+        return str(self.X)
+
+    def __repr__(self):
+        """
+        Representation of the matrix
         """
         return str(self.X)
 
@@ -301,3 +321,31 @@ def gje(X):
         X[i] = X[i][int(cols):len(X[i])]
 
     return X
+
+def recursive_determinant(X):
+    """
+    Find the determinant in a recursive fashion.  Very inefficient
+    X - Matrix object
+    """
+    #Must be a square matrix
+    assert X.rows == X.cols
+    #Must be at least 2x2
+    assert X.rows > 1
+
+    term_list = []
+    #If more than 2 rows, reduce and solve in a piecewise fashion
+    if X.cols>2:
+        for j in xrange(0,X.cols):
+            #Remove i and j columns
+            new_x = deepcopy(X)
+            del new_x[0]
+            new_x.del_column(j)
+            #Find the multiplier
+            multiplier = X[0][j] * math.pow(-1,(2+j))
+            #Recurse to find the determinant
+            det = recursive_determinant(new_x)
+            term_list.append(multiplier*det)
+        return sum(term_list)
+    else:
+        return(X[0][0]*X[1][1] - X[0][1]*X[1][0])
+

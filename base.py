@@ -241,7 +241,6 @@ def invert(X):
 
     i = 0
     for j in xrange(0,cols):
-        print("On col {0} and row {1}".format(j,i))
         #Check to see if there are any nonzero values below the current row in the current column
         zero_sum, first_non_zero = check_for_all_zeros(X,i,j)
         #If everything is zero, increment the columns
@@ -276,7 +275,7 @@ def mean(l):
     Mean of a list
     l - input list
     """
-    sum(l)/len(l)
+    return sum(l)/len(l)
 
 def gje(X):
     X = deepcopy(X)

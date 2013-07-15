@@ -1,6 +1,5 @@
 from base import Algorithm, mean, Matrix
 from copy import deepcopy
-from numpy import array,linalg, ones,vstack
 
 class LinregNonMatrix(Algorithm):
     """
@@ -13,8 +12,8 @@ class LinregNonMatrix(Algorithm):
         """
         x_mean = mean(x)
         y_mean = mean(y)
-        x_dev = sum([i-x_mean for i in x])
-        y_dev = sum([i-y_mean for i in y])
+        x_dev = sum([abs(i-x_mean) for i in x])
+        y_dev = sum([abs(i-y_mean) for i in y])
 
         self.slope = (x_dev*y_dev)/(x_dev*x_dev)
         self.intercept = y_mean - (self.slope*x_mean)
@@ -69,6 +68,7 @@ class LinregNumpy(Algorithm):
         X - input list of lists
         y - input column vector in list form, ie [[1],[2]]
         """
+        from numpy import array,linalg, ones,vstack
         assert len(y) == len(X)
         X = vstack([array(X).T,ones(len(X))]).T
         self.coefs = linalg.lstsq(X,y)[0]
@@ -78,10 +78,6 @@ class LinregNumpy(Algorithm):
         """
         Z - input list of lists
         """
+        from numpy import array, ones,vstack
         Z = vstack([array(Z).T,ones(len(Z))]).T
         return Z.dot(self.coefs)
-
-
-
-
-

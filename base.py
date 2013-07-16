@@ -176,6 +176,10 @@ class Matrix(object):
         """
         return str(self.X)
 
+    @property
+    def determinant(self):
+        return recursive_determinant(self)
+
 def row_multiply(r1,r2):
     """
     Multiply two vectors.  Used for matrix multiplication.

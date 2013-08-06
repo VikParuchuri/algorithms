@@ -1,3 +1,4 @@
+from __future__ import division
 from base import Algorithm, mean, Matrix
 from copy import deepcopy
 
@@ -81,3 +82,14 @@ class LinregNumpy(Algorithm):
         from numpy import array, ones,vstack
         Z = vstack([array(Z).T,ones(len(Z))]).T
         return Z.dot(self.coefs)
+
+def fscore(rss1,rss2,p1,p2,N):
+    """
+    Use formula f = (rss1-rss2)(p2-p1)/(rss2)/(N-p2-1) to calculate f score.
+    F score shows us how much residual error changes with each additional parameter in the "bigger" model, p1
+    """
+    diff = rss2-rss1
+    numerator = diff * (p2-p1)
+    denominator = rss1/(N-p2-1)
+    return numerator/denominator
+
